@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +69,12 @@ public class UserController {
     public ResponseEntity<List<User>> findUsersCityName(){
 
         return new ResponseEntity<>(userService.findAllUsersResistencia(), HttpStatus.OK);
+    }
+
+    @GetMapping("/fecha")
+    public ResponseEntity<?> findAllUsers(@RequestParam (name = "alta") String fecha){
+        LocalDate date = LocalDate.parse(fecha);
+        return new ResponseEntity<>(userService.findAllUsersByFechaAlta(date), HttpStatus.OK);
     }
 
 }

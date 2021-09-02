@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User postUser(User user) {
-        user.setFecha_alta(LocalDate.now());
+        user.setFechaAlta(LocalDate.now());
         user.setStatus("CREATED");
         return userRepository.save(user);
     }
@@ -79,6 +79,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUsersResistencia() {
         return userRepository.findByCityName("Resistencia");
+    }
+
+    @Override
+    public List<User> findAllUsersByFechaAlta(LocalDate date) {
+        return userRepository.findByFechaAltaAfter(date);
     }
 
 

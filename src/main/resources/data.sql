@@ -4,4 +4,8 @@ INSERT INTO tbl_user (id, name, last_name, email, fecha_alta, city_name, state_n
 INSERT INTO tbl_user (id, name, last_name, email, fecha_alta, city_name, state_name, country, status) VALUES (4, 'Enrique', 'Fernandez', 'enriko@gmail.com', '2015-02-05', 'Buenos Aires', 'Chaco', 'Argentina', 'CREATED');
 INSERT INTO tbl_user (id, name, last_name, email, fecha_alta, city_name, state_name, country, status) VALUES (5, 'Marcelo', 'Paz', 'barcelo@gmail.com', '2021-05-23', 'Resistencia', 'Chaco', 'Argentina', 'CREATED');
 
-
+INSERT INTO tbl_product (id, name, description, price, content, fecha_alta, published, status) VALUES (1, 'Parlante usb', 'Parlante para la pc o tv, hdmi o aux', 1700.5, 'Parlante samsung de la parra para todo lo que sea audio', '2018-05-10', 'true', 'CREATED');
+INSERT INTO tbl_product (id, name, description, price, content, fecha_alta, published, status) VALUES (2, 'Tv Samsung 32 pulgas', 'Televisón smart tv con 4 entradas hdmi', 60000.5, 'Tv para ver netflix, youtube, facebook', '2017-05-10', 'false', 'CREATED');
+INSERT INTO tbl_product (id, name, description, price, content, fecha_alta, published, status) VALUES (3, 'Samsung a32 aaaaaaaaa', '4gb de ram y 128gb de memoria interna', 36000.5, 'Un celular con lo último en cámara y software', '2019-05-10', 'true', 'CREATED');
+INSERT INTO tbl_product (id, name, description, price, content, fecha_alta, published, status) VALUES (4, 'Moto g100 aaaaaaa', '8gb de ram y 256gb de memoria interna', 80000.2, 'La gama alta de motorola es lo mejor en calidad-precio', '2016-05-10', 'true', 'CREATED');
+INSERT INTO tbl_product (id, name, description, price, content, fecha_alta, published, status) VALUES (5, 'Parlante Genius Gx', 'Parlante para la pc o tv, hdmi o aux, 40watts', 6000.5, 'Parlante gx para los gamer más exigentes', '2015-05-10', 'false', 'CREATED');

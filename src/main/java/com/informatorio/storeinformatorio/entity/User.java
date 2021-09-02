@@ -8,8 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
+
 
 @Data
 @Entity
@@ -33,9 +32,8 @@ public class User implements Serializable {
     @JsonIgnore
     private String password;
 
-   // @Temporal(TemporalType.DATE)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate fecha_alta;
+    private LocalDate fechaAlta;
 
     @Size(min = 3, max = 35, message = "Mínimo 3 caracteres y máximo 35")
     private String cityName;
