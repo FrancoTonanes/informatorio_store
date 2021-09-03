@@ -8,7 +8,9 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -74,11 +76,21 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<Product> findByKeyword(String keyword) {
-        return null;
+        List<Product> results = productRepository.findByNameContainingIgnoreCase(keyword);
+        return results;
     }
 
     @Override
-    public List<Product> getAllProductUnpublished() {
-        return null;
+    public List<Product> getAllProductPublished(String bool) {
+        String normalizedBool = bool.toLowerCase();
+        List<Product> Published = new ArrayList<>();
+
+        if ( normalizedBool.equals("false") ){
+            Published = productRepository.findByPublishedFalse();
+        }
+        else if ( normalizedBool.equals("true") ){
+            Published = productRepository.findByPublishedTrue();
+        }
+        return Published;
     }
 }

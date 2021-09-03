@@ -2,6 +2,7 @@ package com.informatorio.storeinformatorio.controller;
 
 import com.informatorio.storeinformatorio.entity.Product;
 import com.informatorio.storeinformatorio.service.ProductService;
+import javassist.compiler.ast.Keyword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,18 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<?> getAllProducts(){
+    public ResponseEntity<?> getAllProducts(@RequestParam (required = false, name = "published") String bool,
+                                            @RequestParam (required = false, name = "title") String keyword) {
+
+        if ( bool != null ){
+            return new ResponseEntity<>(productService.getAllProductPublished(bool), HttpStatus.OK);
+        }
+        else if ( keyword != null){
+            return new ResponseEntity<>(productService.findByKeyword(keyword), HttpStatus.OK);
+        }
         return new ResponseEntity<>( productService.getAllProducts(), HttpStatus.OK );
     }
+
     @PostMapping
     public ResponseEntity<?> postProduct(@Valid @RequestBody Product product){
         return new ResponseEntity<>( productService.createProduct(product), HttpStatus.CREATED );

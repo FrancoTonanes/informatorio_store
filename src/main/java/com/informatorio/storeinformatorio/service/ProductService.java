@@ -20,5 +20,5 @@ public interface ProductService {
 
     List<Product> findByKeyword(String keyword);
 
-    List<Product> getAllProductUnpublished();
+    List<Product> getAllProductPublished(String bool);
 }

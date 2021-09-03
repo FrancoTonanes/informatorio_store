@@ -8,5 +8,8 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    public List<Product> findByStatus(String status);
+    List<Product> findByNameContainingIgnoreCase(String keyword);
+    List<Product> findByPublishedTrue();
+    List<Product> findByPublishedFalse();
+
 }
