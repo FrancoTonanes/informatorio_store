@@ -1,10 +1,14 @@
 package com.informatorio.storeinformatorio.controller;
 
+import com.informatorio.storeinformatorio.controller.exceptions.BadRequestException;
+import com.informatorio.storeinformatorio.controller.exceptions.FormatError;
+import com.informatorio.storeinformatorio.controller.exceptions.NotFoundException;
 import com.informatorio.storeinformatorio.entity.User;
 import com.informatorio.storeinformatorio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,7 +32,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postUser(@Valid @RequestBody User user){
+    public ResponseEntity<?> postUser(@Valid @RequestBody User user,  BindingResult result){
+        if (result.hasErrors()){
+            throw new BadRequestException(FormatError.formatMessage(result));
+        }
         return new ResponseEntity<>(userService.postUser(user), HttpStatus.CREATED);
     }
     @PutMapping
@@ -38,7 +45,7 @@ public class UserController {
         User userDB = userService.putUser(id, user);
 
         if (userDB == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Usuario no encontrado");
         }
         return new ResponseEntity<>(userDB, HttpStatus.OK);
     }
@@ -51,7 +58,7 @@ public class UserController {
         User userDB = userService.patchUser(id, user);
 
         if (userDB == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Usuario no encontrado");
         }
         return new ResponseEntity<>(userDB, HttpStatus.OK);
     }
@@ -60,7 +67,7 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@RequestParam (name = "id") Long id){
         User userDeleted = userService.deleteUser(id);
         if (userDeleted == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Usuario no encontrado");
         }
         return new ResponseEntity<>(userDeleted, HttpStatus.OK);
     }

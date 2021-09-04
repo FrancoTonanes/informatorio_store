@@ -1,11 +1,14 @@
 package com.informatorio.storeinformatorio.controller;
 
 import com.informatorio.storeinformatorio.entity.CarritoItem;
+import com.informatorio.storeinformatorio.model.Obervaciones;
 import com.informatorio.storeinformatorio.service.CarritoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(CarritoController.URL)
@@ -24,13 +27,19 @@ public class CarritoController {
     public ResponseEntity<?> addItemCarrito(@PathVariable Long idUser,
                                             @RequestParam (name = "id_producto") Long idProducto){
 
-        return new ResponseEntity<>(carritoService.addCarritoItem(idProducto, idUser), HttpStatus.OK);
+        return new ResponseEntity<>(carritoService.addCarritoItem(idUser, idProducto), HttpStatus.OK);
     }
-    @PutMapping({"idUser"})
-    public ResponseEntity<?> putItemCarrito(@PathVariable Long idUser,
-                                            @RequestParam (name = "id_producto") Long idProduct){
+    @DeleteMapping("{idCarrito}")
+    public ResponseEntity<?> putItemCarrito(@PathVariable Long idCarrito){
+        return new ResponseEntity<>(carritoService.deleteCarrito(idCarrito), HttpStatus.OK);
+    }
 
-        return null;
+    @PostMapping("/checkout")
+    public ResponseEntity<?> checkoutCarrito(@RequestParam (name = "idCarrito") Long idCarrito,
+                                             @RequestBody Obervaciones observaciones){
+
+        return ResponseEntity.ok(carritoService.checkOut(idCarrito, observaciones));
     }
+
 
 }

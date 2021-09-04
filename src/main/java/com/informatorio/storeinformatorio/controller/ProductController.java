@@ -1,11 +1,14 @@
 package com.informatorio.storeinformatorio.controller;
 
+import com.informatorio.storeinformatorio.controller.exceptions.BadRequestException;
+import com.informatorio.storeinformatorio.controller.exceptions.FormatError;
 import com.informatorio.storeinformatorio.entity.Product;
 import com.informatorio.storeinformatorio.service.ProductService;
 import javassist.compiler.ast.Keyword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,7 +37,10 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postProduct(@Valid @RequestBody Product product){
+    public ResponseEntity<?> postProduct(@Valid @RequestBody Product product, BindingResult result){
+        if (result.hasErrors()){
+            throw new BadRequestException(FormatError.formatMessage(result));
+        }
         return new ResponseEntity<>( productService.createProduct(product), HttpStatus.CREATED );
     }
 

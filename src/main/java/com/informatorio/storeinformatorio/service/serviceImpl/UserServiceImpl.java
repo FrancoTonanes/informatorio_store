@@ -32,6 +32,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User postUser(User user) {
+        User userDB = userRepository.findByEmail(user.getEmail());
+        if (userDB != null){
+            return userDB;
+        }
         user.setFechaAlta(LocalDate.now());
         user.setStatus("CREATED");
         return userRepository.save(user);

@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CarritoRepository extends JpaRepository<Carrito, Long> {
     Carrito findByUserIdAndStatusTrue(User user);
+    Carrito findByIdAndStatusTrue(Long id);
 }

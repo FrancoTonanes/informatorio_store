@@ -1,22 +1,27 @@
 package com.informatorio.storeinformatorio.service.serviceImpl;
 
-import com.informatorio.storeinformatorio.entity.Carrito;
-import com.informatorio.storeinformatorio.entity.CarritoItem;
-import com.informatorio.storeinformatorio.entity.Product;
-import com.informatorio.storeinformatorio.entity.User;
-import com.informatorio.storeinformatorio.repository.CarritoItemsRepository;
-import com.informatorio.storeinformatorio.repository.CarritoRepository;
-import com.informatorio.storeinformatorio.repository.ProductRepository;
-import com.informatorio.storeinformatorio.repository.UserRepository;
+import com.informatorio.storeinformatorio.entity.*;
+import com.informatorio.storeinformatorio.model.CarritoItemModel;
+import com.informatorio.storeinformatorio.model.Obervaciones;
+import com.informatorio.storeinformatorio.model.ProductModel;
+import com.informatorio.storeinformatorio.repository.*;
 import com.informatorio.storeinformatorio.service.CarritoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CarritoServiceImpl implements CarritoService {
+
+    @Autowired
+    private CarritoItemModelRespository carritoItemModelRespository;
+    @Autowired
+    private ProductModelRepository productModelRepository;
+    @Autowired
+    private OrdenRepository ordenRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -46,9 +51,9 @@ public class CarritoServiceImpl implements CarritoService {
 
         Carrito carritoActive = new Carrito();
         carritoActive.setStatus(true);
-        carritoActive.setClientPlatform("Mobile");
         carritoActive.setUserId(user);
         carritoActive.setCreatedAt(LocalDate.now());
+        carritoActive.setClientPlatform(platform);
         Carrito carritoActiveDB = carritoRepository.save(carritoActive);
 
         return carritoActiveDB;
@@ -80,7 +85,7 @@ public class CarritoServiceImpl implements CarritoService {
     }
 
     @Override
-    public Carrito addCarritoItem(Long idProduct, Long idUser) {
+    public Carrito addCarritoItem(Long idUser, Long idProduct) {
         User userDB = userRepository.findById(idUser).orElse(null);
         if (userDB == null){
             return null;
@@ -115,6 +120,68 @@ public class CarritoServiceImpl implements CarritoService {
         return carritoActive;
     }
 
+    @Override
+    public Carrito deleteCarrito(Long idCarrito) {
+        Carrito carritoDB = carritoRepository.findById(idCarrito).get();
+        carritoDB.setStatus(false);
+        carritoRepository.save(carritoDB);
+        return carritoDB;
+    }
+
+    public ProductModel createProductModel(Product product, Long referenceItemModel){
+        ProductModel productModel = ProductModel.builder()
+                .name(product.getName())
+                .referenceItemModel(referenceItemModel)
+                .referenceProductId(product.getId())
+                .content(product.getContent())
+                .price(product.getPrice())
+                .build();
+        return productModelRepository.save(productModel);
+    }
+
+
+    public CarritoItemModel createCarritoItemModel(CarritoItem carritoItem, Long idCarrito){
+        ProductModel productModel = productModelRepository.findByReferenceItemModel(carritoItem.getId());
+        CarritoItemModel carritoItemModel = CarritoItemModel.builder()
+                .idCarrito(idCarrito)
+                .productModel(productModel)
+                .quantity(carritoItem.getQuantity())
+                .price(carritoItem.getPrice())
+                .subTotal(productModel.getPrice())
+                .build();
+        return carritoItemModelRespository.save(carritoItemModel);
+    }
+
+    @Override
+    public Orden checkOut(Long idCarrito, Obervaciones observaciones) {
+        Orden ordenDB = ordenRepository.findByIdCarrito(idCarrito);
+        if (ordenDB != null){
+            return ordenDB;
+        }
+        Carrito carritoDB = carritoRepository.findByIdAndStatusTrue(idCarrito);
+        if (carritoDB == null){
+            return null;
+        }
+        totalPrice(carritoDB);
+
+        for (CarritoItem i: carritoDB.getItems()){
+            createProductModel(i.getProduct(), i.getId());
+            createCarritoItemModel(i, carritoDB.getId());
+        }
+
+       List<CarritoItemModel> list =  carritoItemModelRespository.findByIdCarrito(carritoDB.getId());
+        Orden orden = Orden.builder()
+                .idCarrito(carritoDB.getId())
+                .total(carritoDB.getTotal())
+                .createdAt(LocalDate.now())
+                .carritoItemModel(list)
+                .user(carritoDB.getUserId())
+                .status("Cerrado")
+                .observacion(observaciones.getObservation())
+                .build();
+        ordenRepository.save(orden);
+        return orden;
+    }
 
 
 }
