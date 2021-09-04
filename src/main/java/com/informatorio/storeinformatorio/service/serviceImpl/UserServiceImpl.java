@@ -1,7 +1,8 @@
-package com.informatorio.storeinformatorio.service;
+package com.informatorio.storeinformatorio.service.serviceImpl;
 
 import com.informatorio.storeinformatorio.entity.User;
 import com.informatorio.storeinformatorio.repository.UserRepository;
+import com.informatorio.storeinformatorio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
